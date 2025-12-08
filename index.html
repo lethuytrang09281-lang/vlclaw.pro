@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VLC LEGAL</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Framer Motion -->
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-color: #FFFFFF;
+            --accent-orange: #FA4515;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'IBM Plex Mono', monospace;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Syne', sans-serif;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+        .font-syne {
+            font-family: 'Syne', sans-serif;
+        }
+        .stroke-text {
+            -webkit-text-stroke: 1px rgba(255,255,255,0.9); 
+            color: transparent;
+        }
+        ::selection { background: var(--accent-orange); color: #000; }
+        
+        /* Interactive Elements Hover Effect */
+        .interactive:hover { cursor: pointer; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333; 
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FA4515; 
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { motion, useScroll, useSpring, AnimatePresence } = window.Motion;
+
+        /* --- ICONS --- */
+        const Logo = ({ className }) => (
+            <svg viewBox="0 0 784 1168" className={className} fill="currentColor">
+                <path d="M506.728699,401.784851 C497.175446,419.481049 487.838013,436.874878 478.500610,454.268677 C478.824860,454.524536 479.149109,454.780396 479.473358,455.036255 C484.971497,451.238953 490.329712,447.217377 495.992737,443.684418 C516.942261,430.614777 539.693726,421.684998 564.298523,420.238861 C594.679688,418.453186 625.182129,418.625153 655.635681,418.212128 C674.956848,417.950104 694.284485,418.163177 714.109070,418.163177 C709.913330,425.617737 705.827332,432.886505 701.732666,440.150360 C693.694946,454.409180 685.539673,468.603912 677.709534,482.975769 C676.196777,485.752350 674.373535,485.999969 671.778198,485.994843 C643.118408,485.938202 614.458435,485.917450 585.798584,485.946442 C544.154785,485.988556 511.510040,507.481262 495.557098,545.959229 C478.653748,586.729553 487.003296,632.955872 520.137451,662.705017 C536.323425,677.237427 555.406555,686.106140 577.153381,686.833679 C608.600708,687.885742 640.093018,687.632751 671.566895,687.791382 C674.901184,687.808167 676.735779,688.691467 678.435486,691.795532 C689.244263,711.534363 700.350586,711.355469,750.741638 C712.147583,752.154724 712.912842,753.582947 713.990479,755.552124 C711.421448,755.552124 709.362366,755.551636 707.303223,755.552185 C668.650208,755.561646 629.996887,755.492554 591.344177,755.599854 C536.745117,755.751404 490.769684,736.574707 455.773315,694.068665 C446.611267,682.940613 439.724396,669.939331 431.748505,657.730835 C426.548187,666.868774 420.833954,676.909607 414.581604,687.896118 C419.609528,687.896118 423.714722,688.090393 427.790497,687.827637 C430.496246,687.653259 431.818756,688.606018 433.123322,690.967834 C444.885010,712.261475 456.808777,733.465576 469.048828,755.346375 C463.777313,755.346375 458.717285,755.344788 453.657288,755.346619 C406.005859,755.364014 358.354309,755.426208 310.703186,755.314880 C306.934967,755.306091 304.855927,756.413513 302.842010,759.690857 C291.605621,777.976379 280.060486,796.072144 268.620880,814.232788 C268.234833,814.027466 267.848755,813.822205 267.462708,813.616882 C269.787354,809.033752 271.988739,804.383057 274.456665,799.878479 C290.664703,770.295105 306.591278,740.550537 323.252716,711.223877 C351.456604,661.580688 380.173553,612.229126 408.604187,562.714417 C428.792114,527.555176 448.752411,492.264862 469.019867,457.151672 C487.640320,424.891907 506.532715,392.789062 525.324341,360.628235 C525.879883,359.677429 526.649841,358.851898 527.319824,357.967987 C527.733521,358.191223 528.147217,358.414459 528.560974,358.637695 C521.355469,372.919281 514.150024,387.200836 506.728699,401.784851 M479.208221,575.191223 C465.867554,598.414490 452.588623,621.673706 439.102783,644.812378 C437.537354,647.498291 436.766205,649.496948 438.479431,652.388367 C444.958191,663.322510 451.157898,674.422546 457.703186,685.315613 C458.502991,686.646729 460.757965,687.841248 462.346008,687.850647 C487.483673,687.999756 512.622559,687.944519 537.761169,687.936279 C540.231140,687.935486 542.701050,687.936157 546.078552,687.936157 C544.915344,686.574097 544.767334,686.239136 544.522095,686.136475 C519.867432,675.818115 501.855621,658.447876 490.441895,634.405273 C481.585846,615.750366 478.057587,596.064636 480.956116,574.861572 C480.844849,574.576355 480.733612,574.291077 480.622345,574.005859 C480.341492,574.263428 480.060608,574.520996 479.208221,575.191223 M527.169678,495.454956 C545.872620,483.914246 566.170166,478.546051 588.182312,478.802643 C614.506836,479.109528 640.838379,478.786591 667.165771,478.928589 C670.441101,478.946259 672.269287,477.996765 673.839355,475.143585 C680.541687,462.963989 687.463257,450.905060 694.299316,438.799011 C696.793640,434.381775 699.272583,429.955811 702.050964,425.013672 C699.583496,425.013672 697.799805,425.013519 696.016113,425.013672 C661.522095,425.016693 627.028076,425.051636 592.534119,425.009796 C574.347351,424.987762 556.351074,426.664886 538.949585,432.102875 C501.365631,443.847839 470.279724,464.013641 451.904388,500.379852 C446.462128,511.150482 439.461823,521.289307 435.255585,532.498291 C424.779663,560.415222 423.077728,589.408630 428.261597,618.730103 C429.499084,625.729736 431.714355,632.556458 433.839203,640.868225 C472.888702,572.572266 509.132385,504.559509 552.396790,440.632751 C543.475464,458.638977 534.554077,476.645233 525.151489,495.102936 C525.118164,495.674377 525.084900,496.245789 525.051575,496.817230 C525.551025,496.474701 526.050537,496.132141 527.169678,495.454956 M424.923065,694.872498 C417.697357,694.872498 410.471680,694.872498 402.393158,694.872498 C411.106812,679.741211 419.355743,665.621033 427.315582,651.339722 C428.326935,649.525208 428.584076,646.607483 427.908875,644.640930 C420.760590,623.820557 417.739929,602.436157 418.836761,580.495728 C419.242188,572.386597 420.278198,564.309021 421.118805,555.219360 C383.845184,620.083130 347.085999,684.051697 310.242798,748.166443 C359.276733,748.166443 407.833893,748.166443 456.958191,748.166443 456.958191,748.166443 C448.549866,733.242493 440.511566,718.848694 432.325378,704.539490 C430.405548,701.183716 427.985474,698.114075 424.923065,694.872498 M687.489807,748.546326 C691.999451,748.546326 696.509033,748.546326 701.945251,748.546326 C692.256897,731.312439 683.147156,715.398315 674.388428,699.293274 C672.538391,695.891418 670.592896,694.753357 666.742126,694.761597 C606.272278,694.890564 545.802124,694.841919 485.332001,694.834412 C479.112762,694.833618 472.893555,694.834290 465.788300,694.834290 C478.344025,709.376831 492.419250,720.218201 508.245117,728.973877 C534.043091,743.246643 561.888367,748.522461 591.045959,748.474915 C622.861633,748.422974 654.677490,748.498352 687.489807,748.546326 z" />
+            </svg>
+        );
+
+        /* --- ARROW ICON --- */
+        const ArrowDown = ({ className }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+        );
+
+        /* --- PLUS ICON --- */
+        const Plus = ({ className }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        );
+
+        const SectionLabel = ({ number, text }) => (
+            <div className="flex items-center gap-4 mb-8 opacity-50 mix-blend-difference">
+                <span className="text-xs font-mono">({number})</span>
+                <span className="text-xs font-mono tracking-[0.2em] uppercase">{text}</span>
+            </div>
+        );
+
+        /* --- APP COMPONENT --- */
+        const App = () => {
+            const { scrollYProgress } = useScroll();
+            const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+            const [isScrolled, setIsScrolled] = useState(false);
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => setIsScrolled(window.scrollY > 50);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const scrollToSection = (id) => {
+                setIsMenuOpen(false);
+                const element = document.getElementById(id);
+                if (element) element.scrollIntoView({ behavior: 'smooth' });
+            };
+
+            return (
+                <div className="min-h-screen relative">
+                    {/* Progress Bar */}
+                    <motion.div
+                        className="fixed top-0 left-0 right-0 h-[3px] bg-white origin-left z-[100] mix-blend-difference"
+                        style={{ scaleX }}
+                    />
+
+                    {/* Navigation */}
+                    <nav className={`fixed w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-black/80 backdrop-blur-xl h-20 border-b border-white/10' : 'h-24'} `}>
+                        <div className="container mx-auto px-6 h-full flex justify-between items-center relative">
+                            
+                            {/* LOGO */}
+                            <div className="flex items-center gap-3 interactive group cursor-pointer" onClick={() => window.scrollTo(0,0)}>
+                                <div className="w-10 text-white group-hover:text-[#FA4515] transition-colors duration-300">
+                                    <Logo className="w-full h-auto" />
+                                </div>
+                                <div className="font-syne font-bold text-xl md:text-2xl tracking-tighter text-white group-hover:text-[#FA4515] transition-colors duration-300 ml-2">
+                                    VLC LEGAL
+                                </div>
+                            </div>
+
+                            {/* Desktop Menu */}
+                            <div className="hidden md:flex gap-12 items-center">
+                                {['Экспертиза', 'Процесс', 'Команда', 'Контакты'].map((item, i) => (
+                                    <button 
+                                        key={i}
+                                        onClick={() => scrollToSection(item === 'Экспертиза' ? 'expertise' : item === 'Процесс' ? 'process' : item === 'Команда' ? 'team' : 'contact')}
+                                        className="text-xs font-mono uppercase tracking-[0.2em] hover:text-[#FA4515] transition-colors interactive text-white"
+                                    >
+                                        {item}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Mobile Menu Toggle */}
+                            <button 
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                className="md:hidden text-xs font-mono uppercase tracking-[0.2em] interactive hover:text-[#FA4515] transition-colors z-50"
+                            >
+                                {isMenuOpen ? 'CLOSE' : 'MENU'}
+                            </button>
+
+                            {/* Mobile Menu Overlay */}
+                            <AnimatePresence>
+                                {isMenuOpen && (
+                                    <motion.div 
+                                        initial={{ opacity: 0, y: -20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -20 }}
+                                        className="fixed inset-0 bg-black z-40 flex flex-col items-center justify-center gap-8 md:hidden"
+                                    >
+                                        {['Экспертиза', 'Процесс', 'Команда', 'Контакты'].map((item, i) => (
+                                            <button 
+                                                key={i}
+                                                onClick={() => scrollToSection(item === 'Экспертиза' ? 'expertise' : item === 'Процесс' ? 'process' : item === 'Команда' ? 'team' : 'contact')}
+                                                className="text-2xl font-syne uppercase font-bold hover:text-[#FA4515] transition-colors text-white"
+                                            >
+                                                {item}
+                                            </button>
+                                        ))}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    </nav>
+
+                    <main className="relative z-10">
+                        {/* HERO SECTION */}
+                        <section className="min-h-screen w-full flex flex-col justify-center relative px-6 pt-24 border-b border-white/10 overflow-hidden">
+                            {/* Grid Lines */}
+                            <div className="absolute inset-0 grid grid-cols-4 md:grid-cols-12 pointer-events-none px-6">
+                                {[...Array(12)].map((_, i) => (
+                                    <div key={i} className={`border-r border-white/5 h-full ${i % 3 !== 0 && 'hidden md:block'}`} />
+                                ))}
+                            </div>
+
+                            <div className="absolute top-32 right-6 md:right-12 font-mono text-[10px] md:text-xs tracking-widest opacity-60 text-right hidden md:block">
+                                [01] ЗАЩИТА АКТИВОВ
+                            </div>
+                            <div className="absolute bottom-12 left-6 md:left-12 font-mono text-[10px] md:text-xs tracking-widest opacity-60 hidden md:block">
+                                [02] УПРАВЛЕНИЕ РИСКАМИ
+                            </div>
+                            
+                            <div className="container mx-auto relative z-10 h-full flex flex-col justify-center pb-12">
+                                <div className="flex-1 flex flex-col justify-center">
+                                    <motion.h1 
+                                        initial={{ y: 50, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        transition={{ duration: 1 }}
+                                        className="text-[12vw] md:text-[9vw] leading-[0.9] font-bold tracking-tighter text-white text-left uppercase hyphens-none"
+                                    >
+                                        ИНЖЕНЕРНЫЙ<br />
+                                        ПОДХОД<br />
+                                        <span className="stroke-text text-transparent">К ПРАВУ</span>
+                                    </motion.h1>
+
+                                    {/* CTA BUTTON - NO DELAY */}
+                                    <div className="mt-12">
+                                        <button 
+                                            onClick={() => scrollToSection('contact')}
+                                            className="px-8 py-4 border border-white/30 text-xs font-mono uppercase tracking-[0.2em] hover:bg-[#FA4515] hover:border-[#FA4515] hover:text-white transition-all duration-300 interactive group"
+                                        >
+                                            <span className="group-hover:mr-2 transition-all">ОБСУДИТЬ ЗАДАЧУ</span>
+                                            <span className="hidden group-hover:inline transition-all">→</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex justify-between items-end mt-12 md:mt-0">
+                                    <motion.div 
+                                        animate={{ y: [0, 10, 0] }}
+                                        transition={{ repeat: Infinity, duration: 2 }}
+                                        className="interactive ml-auto md:ml-0 text-white opacity-50 cursor-pointer"
+                                        onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
+                                    >
+                                        <ArrowDown className="w-6 h-6" />
+                                    </motion.div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* MANIFESTO */}
+                        <section className="py-32 md:py-40 px-6 border-b border-white/10 relative">
+                            <div className="container mx-auto relative z-10">
+                                <SectionLabel number="00" text="Манифест" />
+                                <h2 className="text-[8vw] md:text-[7vw] leading-[0.95] font-bold tracking-tighter text-left uppercase">
+                                    ВАША БЕЗОПАСНОСТЬ&nbsp;— <br/>
+                                    <span className="opacity-40">НАША ПРЕДУСМОТРИТЕЛЬНОСТЬ.</span>
+                                </h2>
+                                <h2 className="text-[8vw] md:text-[7vw] leading-[0.95] font-bold tracking-tighter mt-12 text-left uppercase">
+                                    ПРЕДВИДЕТЬ&nbsp;— <br/>
+                                    <span className="opacity-40">ЗНАЧИТ ЗАЩИТИТЬ.</span>
+                                </h2>
+                                <div className="mt-12 h-px w-24 bg-white/50" />
+                            </div>
+                        </section>
+
+                        {/* EXPERTISE */}
+                        <section id="expertise" className="border-b border-white/10">
+                            <div className="grid grid-cols-1 md:grid-cols-2">
+                                {[
+                                    { id: '01', title: 'Консультирование', subtitle: 'И ПРАВОВОЕ СОПРОВОЖДЕНИЕ', items: ['Корпоративное право: M&A, уставные документы.', 'Гражданское право: договоры, деликты, IP.', 'Налоговое право: оптимизация, защита при проверках.'] },
+                                    { id: '02', title: 'Банкротство', subtitle: 'КОМПЛЕКСНОЕ СОПРОВОЖДЕНИЕ', items: ['Анализ рисков.', 'Сопровождение процедур (должник/кредитор).', 'Оспаривание сделок, субсидиарная ответственность.'] },
+                                    { id: '03', title: 'Суды', subtitle: 'ПРЕДСТАВИТЕЛЬСТВО И СПОРЫ', items: ['Арбитраж: долги, корпоративные споры.', 'Суды общей юрисдикции.', 'Апелляция и кассация.'] },
+                                    { id: '04', title: 'Превенция', subtitle: 'ЗАЩИТА ДО ТОГО, КАК ПОНАДОБИТСЯ', items: ['Абонентское обслуживание.', 'Due Diligence.', 'Разработка защитных контрактов.'] }
+                                ].map((item, index) => (
+                                    <div key={index} className="border-r border-white/10 border-b p-6 md:p-12 min-h-[40vh] hover:bg-white hover:text-black transition-colors duration-500 group interactive">
+                                        <div className="flex justify-between items-start mb-8">
+                                            <span className="font-mono text-xs opacity-50">/{item.id}</span>
+                                            <Plus className="w-5 h-5 opacity-0 group-hover:opacity-100 text-[#FA4515] transition-all duration-300" />
+                                        </div>
+                                        <h3 className="text-3xl md:text-4xl mb-2 tracking-tight">{item.title}</h3>
+                                        <p className="font-mono text-[10px] tracking-widest opacity-60 mb-8 uppercase group-hover:opacity-100">{item.subtitle}</p>
+                                        <ul className="space-y-3">
+                                            {item.items.map((line, idx) => (
+                                                <li key={idx} className="font-mono text-xs leading-relaxed opacity-70 group-hover:opacity-100 border-l border-current pl-4 transition-colors">
+                                                    {line}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+
+                        {/* BACKGROUND (STATS) */}
+                        <section className="py-32 px-6 border-b border-white/10 bg-transparent relative">
+                            <div className="container mx-auto relative z-10">
+                                <SectionLabel number="02" text="Бэкграунд" />
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-12">
+                                    
+                                    <motion.div 
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.6, delay: 0.1 }}
+                                        className="space-y-4 group interactive"
+                                    >
+                                        <div className="min-h-[6rem] md:min-h-[7rem] flex flex-col justify-end items-start">
+                                            <div className="text-6xl md:text-7xl font-bold font-syne leading-none border-b border-white/20 pb-4 inline-block group-hover:border-white transition-colors duration-300">
+                                                20+
+                                            </div>
+                                        </div>
+                                        <p className="font-mono text-xs uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-opacity">ЛЕТ УСПЕШНОЙ ПРАКТИКИ<br/>В корпоративном праве</p>
+                                    </motion.div>
+                                    
+                                    <motion.div 
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.6, delay: 0.2 }}
+                                        className="space-y-4 group interactive"
+                                    >
+                                        <div className="min-h-[6rem] md:min-h-[7rem] flex flex-col justify-end items-start">
+                                            <div className="text-3xl md:text-4xl font-bold font-syne leading-none border-b border-white/20 pb-4 inline-block group-hover:border-white transition-colors duration-300 uppercase">
+                                                Экспертность
+                                            </div>
+                                        </div>
+                                        <p className="font-mono text-xs opacity-60 leading-relaxed group-hover:opacity-100 transition-opacity">Команда с профильным образованием и судебными победами.</p>
+                                    </motion.div>
+                                    
+                                    <motion.div 
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.6, delay: 0.3 }}
+                                        className="space-y-4 group interactive"
+                                    >
+                                        <div className="min-h-[6rem] md:min-h-[7rem] flex flex-col justify-end items-start">
+                                            <div className="text-3xl md:text-4xl font-bold font-syne leading-none border-b border-white/20 pb-4 inline-block group-hover:border-white transition-colors duration-300 uppercase">
+                                                NDA
+                                            </div>
+                                        </div>
+                                        <p className="font-mono text-xs opacity-60 leading-relaxed group-hover:opacity-100 transition-opacity">Строгое соблюдение тайны.</p>
+                                    </motion.div>
+
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* CONTACT */}
+                        <section id="contact" className="min-h-[80vh] grid grid-cols-1 md:grid-cols-2">
+                            <div className="border-r border-white/10 p-6 md:p-12 lg:p-24 flex flex-col justify-between">
+                                <div>
+                                    <SectionLabel number="05" text="Связь" />
+                                    <h2 className="text-5xl md:text-7xl font-bold mt-12 mb-8 tracking-tighter">ОБСУДИТЬ<br/>ПРОЕКТ</h2>
+                                </div>
+                                <div className="space-y-4 font-mono text-xs opacity-60 mt-12">
+                                    <p className="uppercase tracking-wider">г. Волгоград, шоссе Авиаторов, д. 16, оф. 3.3</p>
+                                    <p className="uppercase tracking-wider interactive hover:text-[#FA4515] transition-colors cursor-pointer">VLCLEGAL@MAIL.RU</p>
+                                </div>
+                            </div>
+                            <div className="p-6 md:p-12 lg:p-24 flex flex-col justify-center border-t md:border-t-0 border-white/10">
+                                <form className="space-y-16">
+                                    {['ИМЯ', 'КОМПАНИЯ', 'ТЕЛЕФОН', 'КРАТКО О ЗАДАЧЕ'].map((placeholder, i) => (
+                                        <div key={i} className="group relative interactive">
+                                            <input type="text" placeholder={placeholder} className="w-full bg-transparent border-b border-white/20 py-4 text-xl font-mono focus:outline-none focus:border-[#FA4515] focus:text-[#FA4515] placeholder:text-white/20 placeholder:text-sm transition-colors duration-300" />
+                                            <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-[#FA4515] transition-all duration-500 group-hover:w-full"></div>
+                                        </div>
+                                    ))}
+                                    <button type="button" className="w-full py-6 text-xs font-mono tracking-[0.2em] uppercase bg-white text-black hover:bg-[#FA4515] hover:text-white transition-all duration-300 interactive mt-8">Отправить запрос</button>
+                                </form>
+                            </div>
+                        </section>
+
+                        {/* FOOTER */}
+                        <footer className="py-8 px-6 bg-black text-white/60 border-t border-white/10">
+                            <div className="container mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-[10px] font-mono uppercase">
+                                <span>© 2025 АО «ВИ ЭЛ СИ». Все права защищены.</span>
+                            </div>
+                        </footer>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
