@@ -295,7 +295,22 @@
                         <section className="py-32 px-6 border-b border-white/10 bg-transparent relative">
                             <div className="container mx-auto relative z-10">
                                 <SectionLabel number="02" text="Бэкграунд" />
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-12">
+                                    
+                                    <motion.div 
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.6, delay: 0.1 }}
+                                        className="space-y-4 group interactive"
+                                    >
+                                        <div className="h-32 flex flex-col justify-end items-start">
+                                            <div className="text-6xl md:text-7xl font-bold font-syne leading-none border-b border-white/20 pb-4 inline-block group-hover:border-white transition-colors duration-300">
+                                                20+
+                                            </div>
+                                        </div>
+                                        <p className="font-mono text-xs uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-opacity">ЛЕТ УСПЕШНОЙ ПРАКТИКИ<br/>В корпоративном праве</p>
+                                    </motion.div>
                                     
                                     <motion.div 
                                         initial={{ opacity: 0, y: 20 }}
