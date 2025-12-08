@@ -134,14 +134,13 @@
                             <div className="flex items-center gap-3 interactive group cursor-pointer" onClick={() => window.scrollTo(0,0)}>
                                 {/* IMAGE LOGO BLOCK */}
                                 <div className="w-12 md:w-14"> 
-                                    {/* ВАЖНО: Замените src="./logo.svg" на имя вашего файла, если оно другое (например logo.png) */}
                                     <img 
                                         src="./logo.svg" 
                                         alt="VLC Logo" 
                                         className="w-full h-auto object-contain logo-img" 
                                         onError={(e) => {
                                             e.target.onerror = null; 
-                                            e.target.style.display = 'none'; // Скрыть, если картинка не найдена
+                                            e.target.style.display = 'none'; 
                                         }}
                                     />
                                 </div>
@@ -377,19 +376,40 @@
                                 <div className="space-y-4 font-mono text-xs opacity-60 mt-12">
                                     <p className="uppercase tracking-wider">Акционерное общество «ВИ ЭЛ СИ»</p>
                                     <p className="uppercase tracking-wider">г. Волгоград, шоссе Авиаторов, д. 16, оф. 3.3</p>
-                                    <p className="uppercase tracking-wider interactive hover:text-[#FA4515] transition-colors cursor-pointer">Email: vlclegal@mail.ru</p>
+                                    <p className="uppercase tracking-wider interactive hover:text-[#FA4515] transition-colors cursor-pointer">Email: project@vlclaw.pro</p>
                                 </div>
                             </div>
                             <div className="p-6 md:p-12 lg:p-24 flex flex-col justify-center border-t md:border-t-0 border-white/10">
-                                <form className="space-y-16">
-                                    {['ИМЯ', 'КОМПАНИЯ', 'ТЕЛЕФОН', 'КРАТКО О ЗАДАЧЕ'].map((placeholder, i) => (
-                                        <div key={i} className="group relative interactive">
-                                            <input type="text" placeholder={placeholder} className="w-full bg-transparent border-b border-white/20 py-4 text-xl font-mono focus:outline-none focus:border-[#FA4515] focus:text-[#FA4515] placeholder:text-white/20 placeholder:text-sm transition-colors duration-300" />
-                                            <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-[#FA4515] transition-all duration-500 group-hover:w-full"></div>
-                                        </div>
-                                    ))}
-                                    <button type="button" className="w-full py-6 text-xs font-mono tracking-[0.2em] uppercase bg-white text-black hover:bg-[#FA4515] hover:text-white transition-all duration-300 interactive mt-8">Отправить запрос</button>
+                                {/* WORKING FORM START */}
+                                <form action="https://formsubmit.co/vlclegal@mail.ru" method="POST" className="space-y-16">
+                                    {/* Settings for FormSubmit */}
+                                    <input type="hidden" name="_subject" value="Новая заявка с сайта VLC LEGAL!" />
+                                    <input type="hidden" name="_captcha" value="false" />
+                                    <input type="hidden" name="_next" value="https://vlclaw.pro" />
+
+                                    <div className="group relative interactive">
+                                        <input type="text" name="name" placeholder="ИМЯ" required className="w-full bg-transparent border-b border-white/20 py-4 text-xl font-mono focus:outline-none focus:border-[#FA4515] focus:text-[#FA4515] placeholder:text-white/20 placeholder:text-sm transition-colors duration-300" />
+                                        <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-[#FA4515] transition-all duration-500 group-hover:w-full"></div>
+                                    </div>
+
+                                    <div className="group relative interactive">
+                                        <input type="text" name="company" placeholder="КОМПАНИЯ" className="w-full bg-transparent border-b border-white/20 py-4 text-xl font-mono focus:outline-none focus:border-[#FA4515] focus:text-[#FA4515] placeholder:text-white/20 placeholder:text-sm transition-colors duration-300" />
+                                        <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-[#FA4515] transition-all duration-500 group-hover:w-full"></div>
+                                    </div>
+
+                                    <div className="group relative interactive">
+                                        <input type="tel" name="phone" placeholder="ТЕЛЕФОН" required className="w-full bg-transparent border-b border-white/20 py-4 text-xl font-mono focus:outline-none focus:border-[#FA4515] focus:text-[#FA4515] placeholder:text-white/20 placeholder:text-sm transition-colors duration-300" />
+                                        <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-[#FA4515] transition-all duration-500 group-hover:w-full"></div>
+                                    </div>
+
+                                    <div className="group relative interactive">
+                                        <input type="text" name="message" placeholder="КРАТКО О ЗАДАЧЕ" className="w-full bg-transparent border-b border-white/20 py-4 text-xl font-mono focus:outline-none focus:border-[#FA4515] focus:text-[#FA4515] placeholder:text-white/20 placeholder:text-sm transition-colors duration-300" />
+                                        <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-[#FA4515] transition-all duration-500 group-hover:w-full"></div>
+                                    </div>
+
+                                    <button type="submit" className="w-full py-6 text-xs font-mono tracking-[0.2em] uppercase bg-white text-black hover:bg-[#FA4515] hover:text-white transition-all duration-300 interactive mt-8">Отправить запрос</button>
                                 </form>
+                                {/* WORKING FORM END */}
                             </div>
                         </section>
 
