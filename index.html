@@ -267,9 +267,9 @@
                         <section id="expertise" className="border-b border-white/10">
                             <div className="grid grid-cols-1 md:grid-cols-2">
                                 {[
-                                    { id: '01', title: 'Консультирование', subtitle: 'И ПРАВОВОЕ СОПРОВОЖДЕНИЕ', items: ['Корпоративное право: M&A, уставные документы.', 'Гражданское право: договоры, деликты, IP.', 'Налоговое право: оптимизация, защита при проверках.'] },
-                                    { id: '02', title: 'Банкротство', subtitle: 'КОМПЛЕКСНОЕ СОПРОВОЖДЕНИЕ', items: ['Анализ рисков.', 'Сопровождение процедур (должник/кредитор).', 'Оспаривание сделок, субсидиарная ответственность.'] },
-                                    { id: '03', title: 'Суды', subtitle: 'ПРЕДСТАВИТЕЛЬСТВО И СПОРЫ', items: ['Арбитраж: долги, корпоративные споры.', 'Суды общей юрисдикции.', 'Апелляция и кассация.'] },
+                                    { id: '01', title: 'Правовое сопровождение', subtitle: 'КОРПОРАТИВНОЕ И НАЛОГОВОЕ', items: ['Корпоративное право: M&A, структурирование и сопровождение сделок, уставные документы, споры между участниками.', 'Налоговое право: оптимизация, защита при проверках и оспаривание решений.'] },
+                                    { id: '02', title: 'Сопровождение банкротства', subtitle: 'ЗАЩИТА ПРАВ И АКТИВОВ', items: ['Анализ рисков.', 'Сопровождение процедур (должник/кредитор).', 'Оспаривание сделок, субсидиарная ответственность, убытки.', 'Защита прав миноритарных кредиторов.'] },
+                                    { id: '03', title: 'Суды', subtitle: 'ПРЕДСТАВИТЕЛЬСТВО И СПОРЫ', items: ['Арбитражные споры: долги, корпоративные конфликты, налоговые споры.', 'Суды общей юрисдикции: защита деловой репутации, трудовые споры.'] },
                                     { id: '04', title: 'Превенция', subtitle: 'ЗАЩИТА ДО ТОГО, КАК ПОНАДОБИТСЯ', items: ['Абонентское обслуживание.', 'Due Diligence.', 'Разработка защитных контрактов.'] }
                                 ].map((item, index) => (
                                     <div key={index} className="border-r border-white/10 border-b p-6 md:p-12 min-h-[40vh] hover:bg-white hover:text-black transition-colors duration-500 group interactive">
@@ -277,7 +277,7 @@
                                             <span className="font-mono text-xs opacity-50">/{item.id}</span>
                                             <Plus className="w-5 h-5 opacity-0 group-hover:opacity-100 text-[#FA4515] transition-all duration-300" />
                                         </div>
-                                        <h3 className="text-3xl md:text-4xl mb-2 tracking-tight">{item.title}</h3>
+                                        <h3 className="text-3xl md:text-4xl mb-2 tracking-tight uppercase">{item.title}</h3>
                                         <p className="font-mono text-[10px] tracking-widest opacity-60 mb-8 uppercase group-hover:opacity-100">{item.subtitle}</p>
                                         <ul className="space-y-3">
                                             {item.items.map((line, idx) => (
