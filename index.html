@@ -1,11 +1,20 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VLC LEGAL</title>
+    <title>VLC LEGAL | Инженерный подход к праву</title>
+    <meta name="description" content="Юридический бутик VLC LEGAL. Корпоративное право, банкротство, защита активов и судебное представительство. Инженерный подход к решению сложных правовых задач.">
+    <meta name="keywords" content="юристы, банкротство, корпоративное право, защита активов, суд, адвокаты">
     
-    <!-- Tailwind CSS -->
+    <!-- Open Graph / Facebook / Telegram -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.vlclaw.pro/">
+    <meta property="og:title" content="VLC LEGAL | Инженерный подход к праву">
+    <meta property="og:description" content="Защита активов, управление рисками, корпоративное право.">
+    <meta property="og:image" content="https://www.vlclaw.pro/og-image.jpg"> <!-- Замените на реальную ссылку на картинку-превью -->
+
+    <!-- Tailwind CSS (Dev version used for standalone, strictly for production use CDN with build step, but this works for simple static sites) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- React & ReactDOM -->
@@ -18,7 +27,7 @@
     <!-- Framer Motion -->
     <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
 
-    <!-- Vercel Analytics & Speed Insights (Added manually for static HTML) -->
+    <!-- Analytics -->
     <script>
         window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
     </script>
@@ -39,6 +48,11 @@
             font-family: 'IBM Plex Mono', monospace;
             margin: 0;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        /* Улучшаем плавность скролла для всего документа */
+        html {
+            scroll-behavior: smooth;
         }
         h1, h2, h3, h4 {
             font-family: 'Syne', sans-serif;
@@ -54,12 +68,9 @@
         }
         ::selection { background: var(--accent-orange); color: #000; }
         
-        /* Interactive Elements Hover Effect */
         .interactive:hover { cursor: pointer; }
 
-        /* Custom class for coloring the logo on hover */
         .group:hover .logo-img {
-            /* Filter to turn white into #FA4515 */
             filter: brightness(0) saturate(100%) invert(31%) sepia(96%) saturate(1871%) hue-rotate(349deg) brightness(101%) contrast(96%);
         }
         .logo-img {
@@ -67,33 +78,84 @@
         }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #050505; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #333; 
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #FA4515; 
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #FA4515; }
+
+        /* Utility helper for mobile menu lock */
+        .overflow-hidden { overflow: hidden !important; }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useRef } = React;
         const { motion, useScroll, useSpring, AnimatePresence } = window.Motion;
 
-        /* --- ARROW ICON --- */
+        /* --- ДАННЫЕ САЙТА (Легко редактировать здесь) --- */
+        
+        const MENU_ITEMS = [
+            { label: 'Экспертиза', id: 'expertise' },
+            { label: 'Процесс', id: 'process' }, // Убедитесь, что секция с id="process" существует, или удалите этот пункт
+            { label: 'Команда', id: 'team' },
+            { label: 'Контакты', id: 'contact' }
+        ];
+
+        const EXPERTISE_DATA = [
+            { 
+                id: '01', 
+                title: 'Правовое сопровождение', 
+                subtitle: 'КОРПОРАТИВНОЕ И НАЛОГОВОЕ', 
+                items: [
+                    'Корпоративное право: M&A, структурирование и сопровождение сделок, уставные документы.',
+                    'Налоговое право: оптимизация, защита при проверках и оспаривание решений.'
+                ] 
+            },
+            { 
+                id: '02', 
+                title: 'Банкротство', 
+                subtitle: 'ЗАЩИТА ПРАВ И АКТИВОВ', 
+                items: [
+                    'Анализ рисков.',
+                    'Сопровождение процедур (должник/кредитор).',
+                    'Оспаривание сделок, субсидиарная ответственность.',
+                    'Защита прав миноритарных кредиторов.'
+                ] 
+            },
+            { 
+                id: '03', 
+                title: 'Суды', 
+                subtitle: 'ПРЕДСТАВИТЕЛЬСТВО И СПОРЫ', 
+                items: [
+                    'Арбитражные споры: долги, корпоративные конфликты.',
+                    'Суды общей юрисдикции: защита деловой репутации, трудовые споры.'
+                ] 
+            },
+            { 
+                id: '04', 
+                title: 'Превенция', 
+                subtitle: 'ЗАЩИТА ДО ТОГО, КАК ПОНАДОБИТСЯ', 
+                items: [
+                    'Абонентское обслуживание.',
+                    'Due Diligence.',
+                    'Разработка защитных контрактов.'
+                ] 
+            }
+        ];
+
+        const TEAM_DATA = [
+            { name: "Игнатов Александр Андреевич*", role: "управляющий партнёр, учредитель" },
+            { name: "Кучерявый Дмитрий Витальевич*", role: "адвокат, учредитель" }
+        ];
+
+        /* --- КОМПОНЕНТЫ --- */
+
         const ArrowDown = ({ className }) => (
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
         );
 
-        /* --- PLUS ICON --- */
         const Plus = ({ className }) => (
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
         );
@@ -105,23 +167,46 @@
             </div>
         );
 
-        /* --- APP COMPONENT --- */
+        /* --- APP --- */
         const App = () => {
             const { scrollYProgress } = useScroll();
             const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
             const [isScrolled, setIsScrolled] = useState(false);
             const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+            // Оптимизированный слушатель скролла
             useEffect(() => {
-                const handleScroll = () => setIsScrolled(window.scrollY > 50);
+                let ticking = false;
+                const handleScroll = () => {
+                    if (!ticking) {
+                        window.requestAnimationFrame(() => {
+                            setIsScrolled(window.scrollY > 50);
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                };
                 window.addEventListener('scroll', handleScroll);
                 return () => window.removeEventListener('scroll', handleScroll);
             }, []);
 
+            // Блокировка скролла body при открытом мобильном меню
+            useEffect(() => {
+                if (isMenuOpen) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
+                return () => { document.body.style.overflow = ''; }
+            }, [isMenuOpen]);
+
             const scrollToSection = (id) => {
                 setIsMenuOpen(false);
                 const element = document.getElementById(id);
-                if (element) element.scrollIntoView({ behavior: 'smooth' });
+                // Используем нативный smooth scroll, так как он надежнее
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
             };
 
             return (
@@ -137,16 +222,19 @@
                         <div className="container mx-auto px-6 h-full flex justify-between items-center relative">
                             
                             {/* LOGO */}
-                            <div className="flex items-center gap-3 interactive group cursor-pointer" onClick={() => window.scrollTo(0,0)}>
-                                {/* IMAGE LOGO BLOCK */}
+                            <div className="flex items-center gap-3 interactive group cursor-pointer" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
                                 <div className="w-12 md:w-14"> 
                                     <img 
                                         src="./logo.svg" 
-                                        alt="VLC Logo" 
-                                        className="w-full h-auto object-contain logo-img" 
+                                        alt="VLC Legal Logo" 
+                                        className="w-full h-auto object-contain logo-img"
+                                        width="56"
+                                        height="56"
                                         onError={(e) => {
                                             e.target.onerror = null; 
                                             e.target.style.display = 'none'; 
+                                            // Fallback text if image fails
+                                            e.target.parentNode.innerHTML = '<span class="font-syne font-bold text-xl">VLC</span>';
                                         }}
                                     />
                                 </div>
@@ -154,13 +242,13 @@
 
                             {/* Desktop Menu */}
                             <div className="hidden md:flex gap-12 items-center">
-                                {['Экспертиза', 'Процесс', 'Команда', 'Контакты'].map((item, i) => (
+                                {MENU_ITEMS.map((item, i) => (
                                     <button 
                                         key={i}
-                                        onClick={() => scrollToSection(item === 'Экспертиза' ? 'expertise' : item === 'Процесс' ? 'process' : item === 'Команда' ? 'team' : 'contact')}
-                                        className="text-xs font-mono uppercase tracking-[0.2em] hover:text-[#FA4515] transition-colors interactive text-white"
+                                        onClick={() => scrollToSection(item.id)}
+                                        className="text-xs font-mono uppercase tracking-[0.2em] hover:text-[#FA4515] transition-colors interactive text-white bg-transparent border-none cursor-pointer"
                                     >
-                                        {item}
+                                        {item.label}
                                     </button>
                                 ))}
                             </div>
@@ -168,7 +256,8 @@
                             {/* Mobile Menu Toggle */}
                             <button 
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                className="md:hidden text-xs font-mono uppercase tracking-[0.2em] interactive hover:text-[#FA4515] transition-colors z-50"
+                                className="md:hidden text-xs font-mono uppercase tracking-[0.2em] interactive hover:text-[#FA4515] transition-colors z-50 bg-transparent border-none text-white cursor-pointer"
+                                aria-label={isMenuOpen ? "Закрыть меню" : "Открыть меню"}
                             >
                                 {isMenuOpen ? 'CLOSE' : 'MENU'}
                             </button>
@@ -180,15 +269,15 @@
                                         initial={{ opacity: 0, y: -20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: -20 }}
-                                        className="fixed inset-0 bg-black z-40 flex flex-col items-center justify-center gap-8 md:hidden"
+                                        className="fixed inset-0 bg-[#050505] z-40 flex flex-col items-center justify-center gap-8 md:hidden h-screen w-screen"
                                     >
-                                        {['Экспертиза', 'Процесс', 'Команда', 'Контакты'].map((item, i) => (
+                                        {MENU_ITEMS.map((item, i) => (
                                             <button 
                                                 key={i}
-                                                onClick={() => scrollToSection(item === 'Экспертиза' ? 'expertise' : item === 'Процесс' ? 'process' : item === 'Команда' ? 'team' : 'contact')}
-                                                className="text-2xl font-syne uppercase font-bold hover:text-[#FA4515] transition-colors text-white"
+                                                onClick={() => scrollToSection(item.id)}
+                                                className="text-2xl font-syne uppercase font-bold hover:text-[#FA4515] transition-colors text-white bg-transparent border-none"
                                             >
-                                                {item}
+                                                {item.label}
                                             </button>
                                         ))}
                                     </motion.div>
@@ -214,7 +303,7 @@
                                 [02] УПРАВЛЕНИЕ РИСКАМИ
                             </div>
                             
-                            <div className="container mx-auto relative z-10 h-full flex flex-col justify-center pb-12">
+                            <div className="container mx-auto relative z-10 h-full flex flex-col justify-center pb-12 pt-20">
                                 <div className="flex-1 flex flex-col justify-center">
                                     <motion.h1 
                                         initial={{ y: 50, opacity: 0 }}
@@ -227,11 +316,10 @@
                                         <span className="stroke-text text-transparent">К ПРАВУ</span>
                                     </motion.h1>
 
-                                    {/* CTA BUTTON - NO DELAY */}
                                     <div className="mt-12">
                                         <button 
                                             onClick={() => scrollToSection('contact')}
-                                            className="px-8 py-4 border border-white/30 text-xs font-mono uppercase tracking-[0.2em] hover:bg-[#FA4515] hover:border-[#FA4515] hover:text-white transition-all duration-300 interactive group"
+                                            className="px-8 py-4 border border-white/30 text-xs font-mono uppercase tracking-[0.2em] hover:bg-[#FA4515] hover:border-[#FA4515] hover:text-white transition-all duration-300 interactive group bg-transparent text-white cursor-pointer"
                                         >
                                             <span className="group-hover:mr-2 transition-all">ОБСУДИТЬ ЗАДАЧУ</span>
                                             <span className="hidden group-hover:inline transition-all">→</span>
@@ -245,6 +333,7 @@
                                         transition={{ repeat: Infinity, duration: 2 }}
                                         className="interactive ml-auto md:ml-0 text-white opacity-50 cursor-pointer"
                                         onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
+                                        aria-label="Прокрутить вниз"
                                     >
                                         <ArrowDown className="w-6 h-6" />
                                     </motion.div>
@@ -271,12 +360,7 @@
                         {/* EXPERTISE */}
                         <section id="expertise" className="border-b border-white/10">
                             <div className="grid grid-cols-1 md:grid-cols-2">
-                                {[
-                                    { id: '01', title: 'Правовое сопровождение', subtitle: 'КОРПОРАТИВНОЕ И НАЛОГОВОЕ', items: ['Корпоративное право: M&A, структурирование и сопровождение сделок, уставные документы, споры между участниками.', 'Налоговое право: оптимизация, защита при проверках и оспаривание решений.'] },
-                                    { id: '02', title: 'Сопровождение банкротства', subtitle: 'ЗАЩИТА ПРАВ И АКТИВОВ', items: ['Анализ рисков.', 'Сопровождение процедур (должник/кредитор).', 'Оспаривание сделок, субсидиарная ответственность, убытки.', 'Защита прав миноритарных кредиторов.'] },
-                                    { id: '03', title: 'Суды', subtitle: 'ПРЕДСТАВИТЕЛЬСТВО И СПОРЫ', items: ['Арбитражные споры: долги, корпоративные конфликты, налоговые споры.', 'Суды общей юрисдикции: защита деловой репутации, трудовые споры.'] },
-                                    { id: '04', title: 'Превенция', subtitle: 'ЗАЩИТА ДО ТОГО, КАК ПОНАДОБИТСЯ', items: ['Абонентское обслуживание.', 'Due Diligence.', 'Разработка защитных контрактов.'] }
-                                ].map((item, index) => (
+                                {EXPERTISE_DATA.map((item, index) => (
                                     <div key={index} className="border-r border-white/10 border-b p-6 md:p-12 min-h-[40vh] hover:bg-white hover:text-black transition-colors duration-500 group interactive">
                                         <div className="flex justify-between items-start mb-8">
                                             <span className="font-mono text-xs opacity-50">/{item.id}</span>
@@ -340,7 +424,6 @@
                                         className="space-y-4 group interactive"
                                     >
                                         <div className="h-32 flex flex-col justify-end items-start">
-                                            {/* Changed from NDA to CONFIDENTIALITY, adjusting font size for length */}
                                             <div className="text-2xl md:text-3xl font-bold font-syne leading-none border-b border-white/20 pb-4 inline-block group-hover:border-white transition-colors duration-300 uppercase">
                                                 КОНФИДЕНЦИАЛЬНОСТЬ
                                             </div>
@@ -352,22 +435,17 @@
                             </div>
                         </section>
 
-                        {/* TEAM SECTION (NEW) */}
+                        {/* TEAM SECTION */}
                         <section id="team" className="py-32 px-6 border-b border-white/10">
                             <div className="container mx-auto relative z-10">
                                 <SectionLabel number="03" text="Команда" />
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mt-12">
-                                    
-                                    <div className="group interactive">
-                                        <h3 className="text-2xl md:text-3xl font-bold font-syne mb-2 group-hover:text-[#FA4515] transition-colors">Игнатов Александр Андреевич*</h3>
-                                        <p className="font-mono text-xs opacity-60 uppercase tracking-widest">управляющий партнёр, учредитель</p>
-                                    </div>
-
-                                    <div className="group interactive">
-                                        <h3 className="text-2xl md:text-3xl font-bold font-syne mb-2 group-hover:text-[#FA4515] transition-colors">Кучерявый Дмитрий Витальевич*</h3>
-                                        <p className="font-mono text-xs opacity-60 uppercase tracking-widest">адвокат, учредитель</p>
-                                    </div>
-
+                                    {TEAM_DATA.map((member, i) => (
+                                        <div key={i} className="group interactive">
+                                            <h3 className="text-2xl md:text-3xl font-bold font-syne mb-2 group-hover:text-[#FA4515] transition-colors">{member.name}</h3>
+                                            <p className="font-mono text-xs opacity-60 uppercase tracking-widest">{member.role}</p>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </section>
@@ -382,40 +460,38 @@
                                 <div className="space-y-4 font-mono text-xs opacity-60 mt-12">
                                     <p className="">Акционерное общество «ВИ ЭЛ СИ»</p>
                                     <p className="">г. Волгоград, шоссе Авиаторов, д. 16, оф. 3.3</p>
-                                    <p className="interactive hover:text-[#FA4515] transition-colors cursor-pointer">Email: project@vlclaw.pro</p>
+                                    <a href="mailto:project@vlclaw.pro" className="interactive hover:text-[#FA4515] transition-colors cursor-pointer block text-white no-underline">Email: project@vlclaw.pro</a>
                                 </div>
                             </div>
                             <div className="p-6 md:p-12 lg:p-24 flex flex-col justify-center border-t md:border-t-0 border-white/10">
                                 {/* WORKING FORM START */}
                                 <form action="https://formsubmit.co/vlclegal@mail.ru" method="POST" className="space-y-16">
-                                    {/* Settings for FormSubmit */}
                                     <input type="hidden" name="_subject" value="Новая заявка с сайта VLC LEGAL!" />
                                     <input type="hidden" name="_captcha" value="false" />
                                     <input type="hidden" name="_next" value="https://vlclaw.pro" />
 
                                     <div className="group relative interactive">
-                                        <input type="text" name="name" placeholder="ИМЯ" required className="w-full bg-transparent border-b border-white/20 py-4 text-xl font-mono focus:outline-none focus:border-[#FA4515] focus:text-[#FA4515] placeholder:text-white/20 placeholder:text-sm transition-colors duration-300" />
+                                        <input type="text" name="name" placeholder="ИМЯ" required className="w-full bg-transparent border-b border-white/20 py-4 text-xl font-mono focus:outline-none focus:border-[#FA4515] focus:text-[#FA4515] placeholder:text-white/20 placeholder:text-sm transition-colors duration-300 text-white" />
                                         <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-[#FA4515] transition-all duration-500 group-hover:w-full"></div>
                                     </div>
 
                                     <div className="group relative interactive">
-                                        <input type="text" name="company" placeholder="КОМПАНИЯ" className="w-full bg-transparent border-b border-white/20 py-4 text-xl font-mono focus:outline-none focus:border-[#FA4515] focus:text-[#FA4515] placeholder:text-white/20 placeholder:text-sm transition-colors duration-300" />
+                                        <input type="text" name="company" placeholder="КОМПАНИЯ" className="w-full bg-transparent border-b border-white/20 py-4 text-xl font-mono focus:outline-none focus:border-[#FA4515] focus:text-[#FA4515] placeholder:text-white/20 placeholder:text-sm transition-colors duration-300 text-white" />
                                         <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-[#FA4515] transition-all duration-500 group-hover:w-full"></div>
                                     </div>
 
                                     <div className="group relative interactive">
-                                        <input type="tel" name="phone" placeholder="ТЕЛЕФОН" required className="w-full bg-transparent border-b border-white/20 py-4 text-xl font-mono focus:outline-none focus:border-[#FA4515] focus:text-[#FA4515] placeholder:text-white/20 placeholder:text-sm transition-colors duration-300" />
+                                        <input type="tel" name="phone" placeholder="ТЕЛЕФОН" required className="w-full bg-transparent border-b border-white/20 py-4 text-xl font-mono focus:outline-none focus:border-[#FA4515] focus:text-[#FA4515] placeholder:text-white/20 placeholder:text-sm transition-colors duration-300 text-white" />
                                         <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-[#FA4515] transition-all duration-500 group-hover:w-full"></div>
                                     </div>
 
                                     <div className="group relative interactive">
-                                        <input type="text" name="message" placeholder="КРАТКО О ЗАДАЧЕ" className="w-full bg-transparent border-b border-white/20 py-4 text-xl font-mono focus:outline-none focus:border-[#FA4515] focus:text-[#FA4515] placeholder:text-white/20 placeholder:text-sm transition-colors duration-300" />
+                                        <input type="text" name="message" placeholder="КРАТКО О ЗАДАЧЕ" className="w-full bg-transparent border-b border-white/20 py-4 text-xl font-mono focus:outline-none focus:border-[#FA4515] focus:text-[#FA4515] placeholder:text-white/20 placeholder:text-sm transition-colors duration-300 text-white" />
                                         <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-[#FA4515] transition-all duration-500 group-hover:w-full"></div>
                                     </div>
 
-                                    <button type="submit" className="w-full py-6 text-xs font-mono tracking-[0.2em] uppercase bg-white text-black hover:bg-[#FA4515] hover:text-white transition-all duration-300 interactive mt-8">Отправить запрос</button>
+                                    <button type="submit" className="w-full py-6 text-xs font-mono tracking-[0.2em] uppercase bg-white text-black hover:bg-[#FA4515] hover:text-white transition-all duration-300 interactive mt-8 cursor-pointer border-none">Отправить запрос</button>
                                 </form>
-                                {/* WORKING FORM END */}
                             </div>
                         </section>
 
